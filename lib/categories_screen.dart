@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:your_app_name/data/database_helper.dart'; // Adjust the import path
-import 'package:your_app_name/recipe_list_by_category_screen.dart'; // We'll create this next
+import 'package:myapp/database_helper.dart'; // Adjust the import path
+import 'package:myapp/custom_app_bar.dart';
+import 'package:myapp/recipe_list_by_category_screen.dart'; // We'll create this next
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
@@ -84,9 +85,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Recipe Categories'),
-      ),
+      appBar: const CustomAppBar(title: 'Recipe Categories'),
       body: _categories.isEmpty
           ? const Center(
               child: Text('No categories added yet.'),

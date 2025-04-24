@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'custom_app_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
+  
   // Simulate user registration status
   final bool isRegistered = false; // Replace with actual logic later
 
@@ -49,73 +51,76 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('User Profile'),
-      ),
+       appBar: CustomAppBar(
+        title: 'User Profile',
+       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            if (!isRegistered) ...[
-              const Center(
-                child: Text(
-                  'Not registered yet.',
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+             if (!isRegistered) 
+               ...[
+                const Center(
+                  child: Text(
+                    'Not registered yet.',
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16.0),
-              Center(
-                child: ElevatedButton.icon(
-                  onPressed: () => _loginWithGmail(context),
-                  icon: const Icon(Icons.mail_outline),
-                  label: const Text('Login with Gmail'),
+                const SizedBox(height: 16.0),
+                Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () => _loginWithGmail(context),
+                    icon: const Icon(Icons.mail_outline),
+                    label: const Text('Login with Gmail'),
+                  ),
                 ),
-              ),
-            ] else ...[
-              const Center(
-                child: CircleAvatar(
-                  radius: 60.0,
-                  backgroundImage: NetworkImage('https://via.placeholder.com/150'), // Placeholder image
+              ]
+            else
+             ...[
+                const Center(
+                  child: CircleAvatar(
+                    radius: 60.0,
+                    backgroundImage: NetworkImage('https://via.placeholder.com/150'), // Placeholder image
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24.0),
-              const Center(
-                child: Text(
-                  'John Doe', // Replace with actual user name
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                const SizedBox(height: 24.0),
+                const Center(
+                  child: Text(
+                    'John Doe', // Replace with actual user name
+                    style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16.0),
-              const Text(
-                'Account ID',
-                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8.0),
-              const TextField(
-                readOnly: true,
-                controller: TextEditingController(text: 'user12345'), // Replace with actual user ID
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+                const SizedBox(height: 16.0),
+                const Text(
+                  'Account ID',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                 ),
-              ),
-              const SizedBox(height: 16.0),
-              const Text(
-                'Info',
-                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8.0),
-              const Text(
-                'Some interesting information about the user can be displayed here. This could include their favorite cuisines, dietary preferences, or anything they want to share.', // Replace with actual user info
-                style: TextStyle(fontSize: 14.0),
-              ),
-              const SizedBox(height: 16.0),
-              const Text(
-                'URL',
-                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8.0),
-              InkWell(
+                const SizedBox(height: 8.0),
+                TextField(
+                  readOnly: true,
+                  controller: TextEditingController(text: 'user12345'),
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                const Text(
+                  'Info',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8.0),
+                const Text(
+                  'Some interesting information about the user can be displayed here. This could include their favorite cuisines, dietary preferences, or anything they want to share.', // Replace with actual user info
+                  style: TextStyle(fontSize: 14.0),
+                ),
+                const SizedBox(height: 16.0),
+                const Text(
+                  'URL',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8.0),
+                InkWell(
                 onTap: () {
                   // TODO: Implement URL launching
                   print('URL tapped');
@@ -123,9 +128,10 @@ class ProfileScreen extends StatelessWidget {
                 child: const Text(
                   'https://example.com/profile', // Replace with actual user URL
                   style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+               ),
                 ),
-              ),
-            ],
+              ],
+           
             const SizedBox(height: 32.0),
             Center(
               child: ElevatedButton(
@@ -135,7 +141,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
           ],
-        ),
+          ),
       ),
     );
   }
