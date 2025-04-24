@@ -1,6 +1,6 @@
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
-import 'dart:convert';
+import 'package:sqflite/sqflite.dart'; // Import sqflite for database operations
+import 'package:path/path.dart'; // Import path for manipulating file paths
+import 'dart:convert'; // Import dart:convert for JSON encoding and decoding
 
 class DatabaseHelper {
   static Database? _database;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/database_helper.dart';
+import 'package:recipeShare/database_helper.dart';
 
 class RecipeListByCategoryScreen extends StatefulWidget {
   final int categoryId;

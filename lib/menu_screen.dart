@@ -1,6 +1,6 @@
-import 'package:myapp/custom_app_bar.dart';
+import 'package:recipeShare/custom_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/profile_screen.dart';
+import 'package:recipeShare/profile_screen.dart';
 
 class MenuScreen extends StatelessWidget {
   const MenuScreen({super.key});

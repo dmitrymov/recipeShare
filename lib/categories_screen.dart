@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/database_helper.dart'; // Adjust the import path
-import 'package:myapp/custom_app_bar.dart';
-import 'package:myapp/recipe_list_by_category_screen.dart'; // We'll create this next
+import 'package:recipeShare/database_helper.dart'; // Adjust the import path
+import 'package:recipeShare/custom_app_bar.dart';
+import 'package:recipeShare/recipe_list_by_category_screen.dart';
+ // We'll create this next
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
