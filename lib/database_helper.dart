@@ -1,5 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' show join;
 import 'dart:convert';
 
 class DatabaseHelper {
@@ -32,11 +32,11 @@ class DatabaseHelper {
     );
   }
 
-  Future<void> _createDb(Database db, int version) async {
+ Future<void> _createDb(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT
+      CREATE TABLE IF NOT EXISTS users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          username TEXT
       )
     ''');
     await db.execute('''
@@ -45,16 +45,16 @@ class DatabaseHelper {
         name TEXT UNIQUE NOT NULL
       )
     ''');
-    await db.execute('''
-      CREATE TABLE recipes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        ingredients TEXT NOT NULL,
-        instructions TEXT NOT NULL,
-        category_id INTEGER,
-        notes TEXT,
-        created_at TEXT,
-        FOREIGN KEY (category_id) REFERENCES categories(id)
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS recipes (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          ingredients TEXT NOT NULL,
+          instructions TEXT NOT NULL,
+          category_id INTEGER,
+          notes TEXT,
+          created_at TEXT,
+          FOREIGN KEY (category_id) REFERENCES categories(id)
       )
     ''');
   }
@@ -66,7 +66,7 @@ class DatabaseHelper {
     return await db.insert(
       'categories',
       {'name': name},
-      conflictAlgorithm: ConflictAlgorithm.ignore, // Avoid duplicate entries
+      conflictAlgorithm: ConflictAlgorithm.replace, // Avoid duplicate entries
     );
   }
 

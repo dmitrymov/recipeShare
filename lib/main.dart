@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:your_app_name/data/database_helper.dart'; // Adjust the import path as needed
+import 'package:myapp/database_helper.dart'; // Adjust the import path as needed
+import 'package:myapp/categories_screen.dart';
+import 'package:myapp/add_recipe_screen.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(home: HomeScreen());
+  }
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -53,7 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const AddRecipeScreen()),
-              ).then((_) {
+              ).then((value) {
+                if(value != null)
+                print(value);
                 _loadRecipes();
               });
             },
@@ -86,5 +100,15 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
     );
+  }
+}
+
+class RecipeDetailScreen extends StatelessWidget {
+  final Map<String, dynamic> recipe;
+  const RecipeDetailScreen({Key? key, required this.recipe}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: Text(recipe["name"]));
   }
 }

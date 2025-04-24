@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:your_app_name/data/database_helper.dart'; // Adjust the import path as needed
+import 'package:myapp/database_helper.dart'; // Adjust the import path as needed
 
 class AddRecipeScreen extends StatefulWidget {
   const AddRecipeScreen({super.key});
