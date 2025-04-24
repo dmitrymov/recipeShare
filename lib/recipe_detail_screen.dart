@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:your_app_name/data/database_helper.dart'; // Adjust the import path
-import 'package:your_app_name/edit_recipe_screen.dart'; // We'll create this next
+import 'package:your_app_name/edit_recipe_screen.dart'; // Adjust the import path
+import 'package:share_plus/share_plus.dart';
 
 class RecipeDetailScreen extends StatelessWidget {
   final Map<String, dynamic> recipe;
@@ -52,6 +53,22 @@ class RecipeDetailScreen extends StatelessWidget {
         );
       }
     }
+  }
+
+  Future<void> _shareRecipe(BuildContext context) async {
+    final String name = recipe['name'] ?? 'Untitled Recipe';
+    final List<String> ingredients = (jsonDecode(recipe['ingredients'] ?? '[]') as List<dynamic>)
+        .cast<String>();
+    final List<String> instructions = (jsonDecode(recipe['instructions'] ?? '[]') as List<dynamic>)
+        .cast<String>();
+
+    String textToShare = '$name\n\nIngredients:\n${ingredients.map((i) => '- $i').join('\n')}\n\nInstructions:\n${instructions.asMap().entries.map((entry) => '${entry.key + 1}. ${entry.value}').join('\n')}';
+
+    if (recipe['notes'] != null && recipe['notes'].isNotEmpty) {
+      textToShare += '\n\nNotes:\n${recipe['notes']}';
+    }
+
+    Share.share(textToShare);
   }
 
   @override
@@ -147,6 +164,10 @@ class RecipeDetailScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _shareRecipe(context),
+        child: const Icon(Icons.share),
       ),
     );
   }

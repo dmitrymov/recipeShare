@@ -1,5 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart' show join;
+import 'package:path/path.dart';
 import 'dart:convert';
 
 class DatabaseHelper {
@@ -32,11 +32,14 @@ class DatabaseHelper {
     );
   }
 
- Future<void> _createDb(Database db, int version) async {
+  Future<void> _createDb(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE IF NOT EXISTS users (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          username TEXT
+      CREATE TABLE users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE,
+        name TEXT,
+        info TEXT,
+        url TEXT
       )
     ''');
     await db.execute('''
@@ -45,18 +48,57 @@ class DatabaseHelper {
         name TEXT UNIQUE NOT NULL
       )
     ''');
-      await db.execute('''
-        CREATE TABLE IF NOT EXISTS recipes (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          name TEXT NOT NULL,
-          ingredients TEXT NOT NULL,
-          instructions TEXT NOT NULL,
-          category_id INTEGER,
-          notes TEXT,
-          created_at TEXT,
-          FOREIGN KEY (category_id) REFERENCES categories(id)
+    await db.execute('''
+      CREATE TABLE recipes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        ingredients TEXT NOT NULL,
+        instructions TEXT NOT NULL,
+        category_id INTEGER,
+        notes TEXT,
+        created_at TEXT,
+        FOREIGN KEY (category_id) REFERENCES categories(id)
       )
     ''');
+  }
+
+  // --- CRUD Operations for Users ---
+
+  Future<int> insertUser(Map<String, dynamic> user) async {
+    final db = await database;
+    return await db.insert(
+      'users',
+      user,
+      conflictAlgorithm: ConflictAlgorithm.ignore, // Avoid duplicate usernames
+    );
+  }
+
+  Future<Map<String, dynamic>?> getUser() async {
+    final db = await database;
+    List<Map<String, dynamic>> result = await db.query('users', limit: 1); // Assuming only one user profile for now
+    if (result.isNotEmpty) {
+      return result.first;
+    }
+    return null;
+  }
+
+  Future<int> updateUser(Map<String, dynamic> user) async {
+    final db = await database;
+    return await db.update(
+      'users',
+      user,
+      where: 'id = ?',
+      whereArgs: [1], // Assuming we're updating the single user profile with ID 1
+    );
+  }
+
+  Future<int> deleteUser() async {
+    final db = await database;
+    return await db.delete(
+      'users',
+      where: 'id = ?',
+      whereArgs: [1], // Assuming we're deleting the single user profile with ID 1
+    );
   }
 
   // --- CRUD Operations for Categories ---

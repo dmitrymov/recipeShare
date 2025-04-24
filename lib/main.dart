@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/database_helper.dart'; // Adjust the import path as needed
 import 'package:myapp/categories_screen.dart';
+import 'package:myapp/profile_screen.dart';
 import 'package:myapp/add_recipe_screen.dart';
 
 void main() => runApp(const MyApp());
@@ -45,8 +46,12 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: IconButton(
           icon: const Icon(Icons.person),
           onPressed: () {
-            // TODO: Implement user profile navigation
-            print('User profile icon pressed');
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const ProfileScreen()),
+              );
           },
         ),
         actions: <Widget>[

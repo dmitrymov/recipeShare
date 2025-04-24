@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/database_helper.dart';
-import 'package:myapp/recipe_list_by_category_screen.dart';
+import 'package:your_app_name/data/database_helper.dart'; // Adjust the import path
+import 'package:your_app_name/recipe_list_by_category_screen.dart'; // We'll create this next
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
@@ -35,6 +35,49 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           categoryName: categoryName,
         ),
       ),
+    );
+  }
+
+  Future<void> _addNewCategory(BuildContext context) async {
+    final TextEditingController categoryNameController = TextEditingController();
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add New Category'),
+          content: TextField(
+            controller: categoryNameController,
+            decoration: const InputDecoration(hintText: 'Category Name'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                final String newCategoryName = categoryNameController.text.trim();
+                if (newCategoryName.isNotEmpty) {
+                  final int result = await _dbHelper.insertCategory(newCategoryName);
+                  if (result > 0) {
+                    _loadCategories(); // Reload categories to update the UI
+                    Navigator.of(context).pop();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Failed to add category.')),
+                    );
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Category name cannot be empty.')),
+                  );
+                }
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -75,6 +118,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 );
               },
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _addNewCategory(context),
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
