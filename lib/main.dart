@@ -1,0 +1,90 @@
+import 'package:flutter/material.dart';
+import 'package:your_app_name/data/database_helper.dart'; // Adjust the import path as needed
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final DatabaseHelper _dbHelper = DatabaseHelper();
+  List<Map<String, dynamic>> _recipes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRecipes();
+  }
+
+  Future<void> _loadRecipes() async {
+    final recipes = await _dbHelper.getAllRecipes();
+    setState(() {
+      _recipes = recipes;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('My Recipes'),
+        leading: IconButton(
+          icon: const Icon(Icons.person),
+          onPressed: () {
+            // TODO: Implement user profile navigation
+            print('User profile icon pressed');
+          },
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.category), // Or any other suitable icon
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CategoriesScreen()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddRecipeScreen()),
+              ).then((_) {
+                _loadRecipes();
+              });
+            },
+          ),
+        ],
+      ),
+      body: _recipes.isEmpty
+          ? const Center(
+              child: Text('No recipes added yet. Click the + to add one!'),
+            )
+          : ListView.builder(
+              itemCount: _recipes.length,
+              itemBuilder: (context, index) {
+                final recipe = _recipes[index];
+                return Card(
+                  margin: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    title: Text(recipe['name'] ?? 'Untitled Recipe'),
+                    subtitle: Text('Category ID: ${recipe['category_id'] ?? 'N/A'}'), // Displaying a basic info for now
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RecipeDetailScreen(recipe: recipe),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+    );
+  }
+}
