@@ -114,6 +114,22 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> getAllCategories() async {
     final db = await database;
+    final categories = await db.query('categories');
+
+     if (categories.isEmpty) {//for testing
+        // Insert dummy data if the categories table is empty
+        await insertCategory('Italian');
+        await insertCategory('Asian');
+        await insertCategory('Desserts');
+    }
+    return await db.query('categories');
+  }
+  Future<List<Map<String, dynamic>>> getCategories() async {
+    final db = await database;
+
+    // Get categories after inserting dummy data if necessary
+
+
     return await db.query('categories');
   }
 
@@ -135,8 +151,41 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, dynamic>>> getAllRecipes() async {
+    
     final db = await database;
-    return await db.query('recipes');
+    final categories = await getAllCategories();
+
+    if (categories.isNotEmpty) {
+        final categoryIds = categories.map((c) => c['id'] as int).toList();
+        final recipes = await db.query('recipes');
+      if (recipes.isEmpty) {//for testing
+
+        await insertRecipe({
+          'name': 'Spaghetti Carbonara',
+          'ingredients': ['spaghetti', 'eggs', 'bacon', 'parmesan cheese', 'black pepper'],
+          'instructions': ['Cook spaghetti', 'Fry bacon', 'Mix eggs and cheese', 'Combine everything'],
+          'categoryId': categoryIds[0], // Use an existing category ID
+          'notes': 'Classic Italian recipe',
+        });
+
+        await insertRecipe({
+          'name': 'Chicken Stir-Fry',
+          'ingredients': ['chicken', 'vegetables', 'soy sauce', 'ginger', 'garlic'],
+          'instructions': ['Cut chicken and vegetables', 'Stir-fry everything', 'Add soy sauce'],
+          'categoryId': categoryIds[1], // Use another existing category ID
+          'notes': 'Quick and easy stir-fry',
+        });
+        await insertRecipe({
+          'name': 'Chocolate Cake',
+          'ingredients': ['flour', 'sugar', 'cocoa powder', 'eggs', 'milk', 'butter'],
+          'instructions': ['Mix dry ingredients', 'Mix wet ingredients', 'Combine and bake'],
+          'categoryId': categoryIds[2],
+          'notes': 'Delicious chocolate cake',
+        });
+      }
+    }
+    final recipes = await db.query('recipes');
+    return recipes;
   }
 
   Future<Map<String, dynamic>?> getRecipeById(int id) async {
