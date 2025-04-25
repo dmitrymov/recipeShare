@@ -6,5 +6,8 @@
   "addRecipe": "Add Recipe",
   "editRecipe": "Edit Recipe",
   "recipeDetails": "Recipe Details",
-  "myRecipes": "My Recipes"
+  "languages": "Languages",
+  "menu": "Menu",
+  "language": "Language",
+  "exit": "Exit"
 }

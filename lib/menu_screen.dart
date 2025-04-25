@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:recipeShare/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:recipeShare/language_provider.dart';
@@ -12,17 +11,17 @@ class MenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) { 
     return Scaffold(
-        appBar: const PreferredSize(
+        appBar: PreferredSize(
           preferredSize:
               Size.fromHeight(kToolbarHeight), // Standard AppBar height
           child: CustomAppBar(
-            title: 'Menu',
-          ),
+            title: AppLocalizations.of(context).menu,
+           ),
         ),
         body: ListView(
           children: <Widget>[
             ListTile(
-              title: const Text('Language'),
+              title:  Text(AppLocalizations.of(context).language),
               onTap: () {
                 Navigator.push(
                   context,
@@ -32,14 +31,14 @@ class MenuScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              title: const Text('Profile'),
+              title: Text('Profile'),
               onTap: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const ProfileScreen()));
               },
-            ),
+            ),            
             ListTile(
               title: const Text('Exit'),
               onTap: () {
@@ -66,13 +65,13 @@ class LanguageScreen extends StatelessWidget {
     final locales = supportedLocales.keys.toList();
 
     return Scaffold(
-      appBar: const PreferredSize(
+      appBar:  PreferredSize(
         preferredSize:
             Size.fromHeight(kToolbarHeight), // Standard AppBar height
-        child: CustomAppBar(title: 'Languages'),
+        child: CustomAppBar(title: AppLocalizations.of(context).languages),
       ),
       body: ListView.builder(
-        itemCount: supportedLocales.length,
+        itemCount: languages.length,
         itemBuilder: (context, index) {
           final languageName = languages[index] ?? 'Unknown';
           return  ListTile(
@@ -87,3 +86,4 @@ class LanguageScreen extends StatelessWidget {
     );
   }
 }
+

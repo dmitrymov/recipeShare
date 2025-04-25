@@ -6,5 +6,9 @@
   "addRecipe": "Añadir Receta",
   "editRecipe": "Editar Receta",
   "recipeDetails": "Detalles de la Receta",
-  "myRecipes": "Mis Recetas"
+  "myRecipes": "Mis Recetas", 
+  "languages": "Idiomas",
+  "menu": "Menú",
+  "language": "Idioma",
+  "exit": "Salir"
 }

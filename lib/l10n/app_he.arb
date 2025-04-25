@@ -6,5 +6,9 @@
   "addRecipe": "הוסף מתכון",
   "editRecipe": "ערוך מתכון",
   "recipeDetails": "פרטי המתכון",
-  "myRecipes": "המתכונים שלי"
+  "myRecipes": "המתכונים שלי",
+  "languages": "שפות",
+  "menu": "תפריט",
+  "language": "שפה",
+  "exit": "יציאה"
 }
