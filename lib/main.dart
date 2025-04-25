@@ -9,6 +9,7 @@ import 'package:recipeShare/add_recipe_screen.dart';
 import 'package:recipeShare/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:recipeShare/language_provider.dart';
+import 'package:recipeShare/navigation_buttons.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(create: (context) => LanguageProvider(), child: RecipeShareApp()));
@@ -63,46 +64,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+        
     return Scaffold(
-      appBar: CustomAppBar(title: AppLocalizations.of(context).myRecipes, leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const MenuScreen()));
-      })),
-      bottomNavigationBar: BottomNavigationBar(items: [
-        BottomNavigationBarItem(
-          icon:  IconButton(
-              icon: const Icon(Icons.category),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const CategoriesScreen()),
-                );
-              },
-          ),
-          label: AppLocalizations.of(context).categories,
-        ),
-        BottomNavigationBarItem(
-          icon: IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const AddRecipeScreen()),).then((value) {
-                _loadRecipes();
-              });
-            },
-          ), label: AppLocalizations.of(context).addRecipe,),
-        BottomNavigationBarItem(
-          icon: IconButton(
-              icon: const Icon(Icons.person),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ProfileScreen()),
-                );
-              }), 
-              label: AppLocalizations.of(context).profile,),
-      ]),
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context).myRecipes,
+        leading: const MenuButton(),       
+        actions: [
+          CategoriesButton(),
+          AddRecipeButton(onRecipeAdded: () {
+            _loadRecipes();
+          },),
+          const ProfileButton(),
+        ],
+      ),
       body: _recipes.isEmpty
           ? const Center(
               child: Text('No recipes added yet. Click the + to add one!'),
