@@ -8,6 +8,14 @@
   "recipeDetails": "Recipe Details",
   "languages": "Languages",
   "menu": "Menu",
-  "language": "Language",
-  "exit": "Exit"
+  "language": "Language",  
+  "exit": "Exit",
+  "addNewCategory": "Add New Category",
+  "categoryName": "Category Name",
+  "cancel": "Cancel",
+  "add": "Add",
+  "noCategoriesAddedYet": "No categories added yet.",
+  "failedToAddCategory": "Failed to add category.",
+  "categoryNameCannotBeEmpty": "Category name cannot be empty.",
+  "recipesInCategory": "Recipes in %s"
 }

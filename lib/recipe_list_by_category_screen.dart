@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipeShare/database_helper.dart';
 import 'package:recipeShare/main.dart';
+import 'package:recipeShare/recipe_item.dart';
 
 class RecipeListByCategoryScreen extends StatefulWidget {
   final int categoryId;
@@ -52,17 +53,8 @@ class _RecipeListByCategoryScreenState extends State<RecipeListByCategoryScreen>
               itemCount: _recipes.length,
               itemBuilder: (context, index) {
                 final recipe = _recipes[index];
-                return Card(
-                  margin: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    title: Text(recipe['name'] ?? 'Untitled Recipe'),
-                    onTap: () {
-                      Navigator.push(context,MaterialPageRoute(
-                        builder: (context) => RecipeDetailScreen(recipe: recipe))
-                        );
-                    },
-                  ),
-                );
+                return RecipeItem(recipe: recipe);
+
               },
             ),
     );

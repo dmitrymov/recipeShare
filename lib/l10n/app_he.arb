@@ -9,6 +9,14 @@
   "myRecipes": "המתכונים שלי",
   "languages": "שפות",
   "menu": "תפריט",
-  "language": "שפה",
-  "exit": "יציאה"
+  "language": "שפה",  
+  "exit": "יציאה",
+  "addNewCategory": "הוסף קטגוריה חדשה",
+  "categoryName": "שם קטגוריה",
+  "cancel": "בטל",
+  "add": "הוסף",
+  "noCategoriesAddedYet": "לא נוספו קטגוריות עדיין.",
+  "failedToAddCategory": "הוספת הקטגוריה נכשלה.",
+  "categoryNameCannotBeEmpty": "שם הקטגוריה לא יכול להיות ריק.",
+  "recipesInCategory": "מתכונים ב-%s"
 }

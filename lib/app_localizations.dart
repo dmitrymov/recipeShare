@@ -24,6 +24,13 @@ class AppLocalizations {
       'language':'Language',
       'exit':'Exit',
       'languages':'Languages',
+      'addNewCategory':'Add New Category',
+      'categoryName':'Category Name',
+      'cancel':'Cancel',
+      'add':'Add',
+      'noCategoriesAddedYet':'No categories added yet.',
+      'failedToAddCategory':'Failed to add category.',
+      'categoryNameCannotBeEmpty':'Category name cannot be empty.',
     },
     'es': {
       'Home':'Inicio',
@@ -37,6 +44,13 @@ class AppLocalizations {
       'language':'Idioma',
       'exit':'Salir',
       'languages':'Idiomas',
+      'addNewCategory':'Añadir Nueva Categoría',
+      'categoryName':'Nombre de Categoría',
+      'cancel':'Cancelar',
+      'add':'Añadir',
+      'noCategoriesAddedYet':'Aún no hay categorías añadidas.',
+      'failedToAddCategory':'Error al añadir la categoría.',
+      'categoryNameCannotBeEmpty':'El nombre de la categoría no puede estar vacío.',
     },
     'fr': {
       'Home':'Accueil',
@@ -50,6 +64,13 @@ class AppLocalizations {
       'language':'Langue',
       'exit':'Quitter',
       'languages':'Langues',
+      'addNewCategory':'Ajouter une nouvelle catégorie',
+      'categoryName':'Nom de la catégorie',
+      'cancel':'Annuler',
+      'add':'Ajouter',
+      'noCategoriesAddedYet':'Aucune catégorie ajoutée pour le moment.',
+      'failedToAddCategory':'Échec de l\'ajout de la catégorie.',
+      'categoryNameCannotBeEmpty':'Le nom de la catégorie ne peut pas être vide.',
     },
     'de': {
       'Home':'Startseite',
@@ -63,6 +84,13 @@ class AppLocalizations {
       'language':'Sprache',
       'exit':'Verlassen',
       'languages':'Sprachen',
+      'addNewCategory':'Neue Kategorie hinzufügen',
+      'categoryName':'Kategoriename',
+      'cancel':'Abbrechen',
+      'add':'Hinzufügen',
+      'noCategoriesAddedYet':'Noch keine Kategorien hinzugefügt.',
+      'failedToAddCategory':'Kategorie konnte nicht hinzugefügt werden.',
+      'categoryNameCannotBeEmpty':'Der Kategoriename darf nicht leer sein.',
     },
     'he': {
       'Home':'בית',
@@ -76,6 +104,13 @@ class AppLocalizations {
       'language':'שפה',
       'exit':'יציאה',
       'languages':'שפות',
+      'addNewCategory':'הוסף קטגוריה חדשה',
+      'categoryName':'שם קטגוריה',
+      'cancel':'בטל',
+      'add':'הוסף',
+      'noCategoriesAddedYet':'לא נוספו קטגוריות עדיין.',
+      'failedToAddCategory':'הוספת הקטגוריה נכשלה.',
+      'categoryNameCannotBeEmpty':'שם הקטגוריה לא יכול להיות ריק.',
     },
   };
 
@@ -121,9 +156,36 @@ class AppLocalizations {
   }
   List<String> get getLanguages{
     return _localizedValues.keys.toList();
+  } 
+  String get addNewCategory {
+    return lookup('addNewCategory');
+  }
+
+  String get categoryName {
+    return lookup('categoryName');
+  }
+
+  String get cancel {
+    return lookup('cancel');
+  }
+
+  String get add {
+    return lookup('add');
+  }
+
+  String get noCategoriesAddedYet {
+    return lookup('noCategoriesAddedYet');
+  }
+
+  String get failedToAddCategory {
+    return lookup('failedToAddCategory');
+  }
+
+  String get categoryNameCannotBeEmpty {
+    return lookup('categoryNameCannotBeEmpty');
   }
   
-  String lookup(String key) {
+    String lookup(String key) {
     return _localizedValues[locale.languageCode]![key] ?? key;
   }
 }

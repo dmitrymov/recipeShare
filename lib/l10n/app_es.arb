@@ -9,6 +9,14 @@
   "myRecipes": "Mis Recetas", 
   "languages": "Idiomas",
   "menu": "Menú",
-  "language": "Idioma",
-  "exit": "Salir"
+  "language": "Idioma", 
+  "exit": "Salir",
+  "addNewCategory": "Añadir Nueva Categoría",
+  "categoryName": "Nombre de Categoría",
+  "cancel": "Cancelar",
+  "add": "Añadir",
+  "noCategoriesAddedYet": "Aún no hay categorías añadidas.",
+  "failedToAddCategory": "Error al añadir la categoría.",
+  "categoryNameCannotBeEmpty": "El nombre de la categoría no puede estar vacío.",
+  "recipesInCategory": "Recetas en %s"
 }

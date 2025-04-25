@@ -3,6 +3,7 @@ import 'package:recipeShare/database_helper.dart'; // Adjust the import path
 import 'package:recipeShare/app_localizations.dart';
 import 'package:recipeShare/custom_app_bar.dart';
 import 'package:recipeShare/recipe_list_by_category_screen.dart';
+import 'package:recipeShare/l10n/app_en.arb';
  // We'll create this next
 
 class CategoriesScreen extends StatefulWidget {
@@ -48,20 +49,20 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Add New Category'),
-          content: TextField(
+          content:  TextField(
             controller: categoryNameController,
-            decoration: const InputDecoration(hintText: 'Category Name'),
+            decoration:  InputDecoration(hintText: AppLocalizations.of(context).categoryName),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
+              child:  Text(AppLocalizations.of(context).cancel),
             ),
             TextButton(
               onPressed: () async {
                 final String newCategoryName = categoryNameController.text.trim();
                 if (newCategoryName.isNotEmpty) {
-                  final int result = await _dbHelper.insertCategory(newCategoryName);
+                 final int result = await _dbHelper.insertCategory(newCategoryName);
                   if (result > 0) {
                     _loadCategories(); // Reload categories to update the UI
                     Navigator.of(context).pop();
@@ -72,11 +73,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Category name cannot be empty.')),
+                     SnackBar(content: Text(AppLocalizations.of(context).categoryNameCannotBeEmpty)),
                   );
                 }
               },
-              child: const Text('Add'),
+              child: Text(AppLocalizations.of(context).add),
             ),
           ],
         );
@@ -91,8 +92,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           title: AppLocalizations.of(context).categories,
         ),
       body: _categories.isEmpty
-          ? const Center(
-              child: Text('No categories added yet.'),
+           ?  Center(
+              child: Text(AppLocalizations.of(context).noCategoriesAddedYet),
             )
           : GridView.builder(
               padding: const EdgeInsets.all(8.0),
