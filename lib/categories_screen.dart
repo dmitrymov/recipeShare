@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipeShare/database_helper.dart'; // Adjust the import path
+import 'package:recipeShare/app_localizations.dart';
 import 'package:recipeShare/custom_app_bar.dart';
 import 'package:recipeShare/recipe_list_by_category_screen.dart';
  // We'll create this next
@@ -86,7 +87,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Recipe Categories'),
+      appBar: CustomAppBar(
+          title: AppLocalizations.of(context).categories,
+        ),
       body: _categories.isEmpty
           ? const Center(
               child: Text('No categories added yet.'),

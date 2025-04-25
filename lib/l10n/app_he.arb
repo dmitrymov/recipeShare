@@ -1,0 +1,10 @@
+{
+  "@@locale": "he",
+  "home": "בית",
+  "categories": "קטגוריות",
+  "profile": "פרופיל",
+  "addRecipe": "הוסף מתכון",
+  "editRecipe": "ערוך מתכון",
+  "recipeDetails": "פרטי המתכון",
+  "myRecipes": "המתכונים שלי"
+}

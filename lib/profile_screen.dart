@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipeShare/app_localizations.dart';
 import 'package:recipeShare/custom_app_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -52,7 +53,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
        appBar: CustomAppBar(
-        title: 'User Profile',
+        title: AppLocalizations.of(context).profile,
        ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

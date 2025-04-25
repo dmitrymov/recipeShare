@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:recipeShare/app_localizations.dart';
 import 'package:recipeShare/database_helper.dart'; // Adjust the import path
 import 'package:recipeShare/edit_recipe_screen.dart'; // Adjust the import path
 import 'package:share_plus/share_plus.dart';
@@ -68,7 +69,10 @@ class RecipeDetailScreen extends StatelessWidget {
       textToShare += '\n\nNotes:\n${recipe['notes']}';
     }
 
-    Share.share(textToShare);
+    SharePlus.instance.share(ShareParams(
+        text: textToShare,
+        subject: "Share",
+      ));
   }
 
   @override
@@ -80,7 +84,7 @@ class RecipeDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(recipe['name'] ?? 'Recipe Details'),
+        title: Text(AppLocalizations.of(context).recipeDetails),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.edit),

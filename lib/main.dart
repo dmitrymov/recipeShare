@@ -1,18 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:recipeShare/database_helper.dart'; // Adjust the import path as needed
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:recipeShare/categories_screen.dart';
 import 'package:recipeShare/profile_screen.dart';
 import 'package:recipeShare/menu_screen.dart';
 import 'package:recipeShare/custom_app_bar.dart';
 import 'package:recipeShare/add_recipe_screen.dart';
+import 'package:recipeShare/app_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:recipeShare/language_provider.dart';
 
-void main() => runApp(const RecipesShareApp());
+void main() {
+  runApp(ChangeNotifierProvider(create: (context) => LanguageProvider(), child: RecipeShareApp()));
+}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class RecipeShareApp extends StatefulWidget {
+  const RecipeShareApp({super.key});
+  @override
+  _RecipeShareAppState createState() => _RecipeShareAppState();
+}
+
+class _RecipeShareAppState extends State<RecipeShareApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: HomeScreen());
+    final languageProvider = Provider.of<LanguageProvider>(context);
+
+    return MaterialApp(
+      supportedLocales: languageProvider.getSupportedLocales(), locale: languageProvider.getLocale(),
+      localizationsDelegates: const [
+        AppLocalizationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      home: HomeScreen(),
+    );
   }
 }
 
@@ -43,14 +64,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'My Recipes', leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {
+      appBar: CustomAppBar(title: AppLocalizations.of(context).myRecipes, leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {
         Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const MenuScreen()));
       })),
       bottomNavigationBar: BottomNavigationBar(items: [
         BottomNavigationBarItem(
-          icon: IconButton(
+          icon:  IconButton(
               icon: const Icon(Icons.category),
               onPressed: () {
                 Navigator.push(
@@ -59,29 +80,28 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (context) => const CategoriesScreen()),
                 );
               },
-            ),
-          label: 'Categories',
+          ),
+          label: AppLocalizations.of(context).categories,
         ),
         BottomNavigationBarItem(
           icon: IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => const AddRecipeScreen()),).then((value) {
-                if (value != null)
-                  print(value);
                 _loadRecipes();
               });
             },
-          ), label: "Add Recipe",),
-        BottomNavigationBarItem(icon: IconButton(
+          ), label: AppLocalizations.of(context).addRecipe,),
+        BottomNavigationBarItem(
+          icon: IconButton(
               icon: const Icon(Icons.person),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const ProfileScreen()),
                 );
-              }),
-              label: "Profile",),
+              }), 
+              label: AppLocalizations.of(context).profile,),
       ]),
       body: _recipes.isEmpty
           ? const Center(
@@ -101,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
+                            color: Colors.grey,
                             spreadRadius: 2,
                             blurRadius: 5,
                             offset: const Offset(0, 3), // changes position of shadow
@@ -132,16 +152,5 @@ class RecipeDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: Text(recipe["name"]));
-  }
-}
-
-class RecipesShareApp extends StatelessWidget {
-  const RecipesShareApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomeScreen(),
-    );
   }
 }

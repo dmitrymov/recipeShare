@@ -1,0 +1,10 @@
+{
+  "@@locale": "de",
+  "home": "Startseite",
+  "categories": "Kategorien",
+  "profile": "Profil",
+  "addRecipe": "Rezept hinzufügen",
+  "editRecipe": "Rezept bearbeiten",
+  "recipeDetails": "Rezeptdetails",
+  "myRecipes": "Meine Rezepte"
+}

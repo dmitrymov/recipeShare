@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipeShare/app_localizations.dart';
 import 'package:recipeShare/database_helper.dart'; // Adjust the import path as needed
 
 class AddRecipeScreen extends StatefulWidget {
@@ -58,7 +59,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Recipe'),
+        title: Text(AppLocalizations.of(context).addRecipe),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

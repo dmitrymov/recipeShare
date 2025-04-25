@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipeShare/database_helper.dart';
+import 'package:recipeShare/main.dart';
 
 class RecipeListByCategoryScreen extends StatefulWidget {
   final int categoryId;
@@ -56,8 +57,9 @@ class _RecipeListByCategoryScreenState extends State<RecipeListByCategoryScreen>
                   child: ListTile(
                     title: Text(recipe['name'] ?? 'Untitled Recipe'),
                     onTap: () {
-                      // TODO: Implement navigation to view recipe details
-                      print('Recipe tapped: ${recipe['name']}');
+                      Navigator.push(context,MaterialPageRoute(
+                        builder: (context) => RecipeDetailScreen(recipe: recipe))
+                        );
                     },
                   ),
                 );

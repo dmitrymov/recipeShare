@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipeShare/database_helper.dart'; // Adjust the import path
 import 'dart:convert';
+import 'package:recipeShare/app_localizations.dart';
 
 class EditRecipeScreen extends StatefulWidget {
   final Map<String, dynamic> recipe;
@@ -66,7 +67,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Recipe'),
+        title: Text(AppLocalizations.of(context).editRecipe),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
