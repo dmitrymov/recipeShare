@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:your_app_name/data/database_helper.dart'; // Adjust the import path
-import 'package:your_app_name/edit_recipe_screen.dart'; // Adjust the import path
+import 'package:recipeShare/database_helper.dart'; // Adjust the import path
+import 'package:recipeShare/edit_recipe_screen.dart'; // Adjust the import path
 import 'package:share_plus/share_plus.dart';
 
 class RecipeDetailScreen extends StatelessWidget {

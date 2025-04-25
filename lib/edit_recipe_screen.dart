@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:your_app_name/data/database_helper.dart'; // Adjust the import path
+import 'package:recipeShare/database_helper.dart'; // Adjust the import path
 import 'dart:convert';
 
 class EditRecipeScreen extends StatefulWidget {

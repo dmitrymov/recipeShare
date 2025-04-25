@@ -47,35 +47,42 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const MenuScreen()));
-      }),),
-      
-       bottomNavigationBar: BottomNavigationBar(items: [
-          IconButton(
+      })),
+      bottomNavigationBar: BottomNavigationBar(items: [
+        BottomNavigationBarItem(
+          icon: IconButton(
               icon: const Icon(Icons.category),
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CategoriesScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const CategoriesScreen()),
                 );
               },
-              ),
-              IconButton(icon: const Icon(Icons.add), onPressed: () {
-                Navigator.push(context,MaterialPageRoute(builder: (context) => const AddRecipeScreen()),).then((value) {
-                  if(value != null)
+            ),
+          label: 'Categories',
+        ),
+        BottomNavigationBarItem(
+          icon: IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AddRecipeScreen()),).then((value) {
+                if (value != null)
                   print(value);
-                  _loadRecipes();
-                });
-              },),
-                IconButton(
-              icon: const Icon(Icons.person,),
+                _loadRecipes();
+              });
+            },
+          ), label: "Add Recipe",),
+        BottomNavigationBarItem(icon: IconButton(
+              icon: const Icon(Icons.person),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const ProfileScreen()),
                 );
               }),
-        ],
-      ),
+              label: "Profile",),
+      ]),
       body: _recipes.isEmpty
           ? const Center(
               child: Text('No recipes added yet. Click the + to add one!'),
@@ -107,15 +114,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () {
                         Navigator.push(context,MaterialPageRoute(
                         builder: (context) => RecipeDetailScreen(recipe: recipe))
-
-                        
-                      );
-                    },                    
-                  ),
+                        );
+                      },
+                    ),
+                  
                 );
               },
             ),
-    );
+    );  
   }
 }
 
