@@ -1,5 +1,6 @@
 import 'package:recipeShare/custom_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:recipeShare/language_provider.dart';
 import 'package:recipeShare/app_localizations.dart';
 import 'package:recipeShare/profile_screen.dart';
@@ -31,7 +32,7 @@ class MenuScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              title: Text('Profile'),
+              title: Text(AppLocalizations.of(context).profile),
               onTap: () {
                 Navigator.push(
                     context,
@@ -40,12 +41,9 @@ class MenuScreen extends StatelessWidget {
               },
             ),            
             ListTile(
-              title: const Text('Exit'),
+              title: Text(AppLocalizations.of(context).exit),
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  //close app
-                  const SnackBar(content: Text('Exit tapped')),
-                );
+                SystemNavigator.pop();
               },
             ),
           ],
