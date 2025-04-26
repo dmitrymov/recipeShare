@@ -4,7 +4,7 @@ import 'package:recipeShare/recipe_detail_screen.dart';
 class RecipeItem extends StatelessWidget {
   final Map<String, dynamic> recipe;
 
-  const RecipeItem({Key? key, required this.recipe}) : super(key: key);
+  const RecipeItem({super.key, required this.recipe});
 
   @override
   Widget build(BuildContext context) {

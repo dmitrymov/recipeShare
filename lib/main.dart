@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class RecipeDetailScreen extends StatelessWidget {
   final Map<String, dynamic> recipe;
-  const RecipeDetailScreen({Key? key, required this.recipe}) : super(key: key);
+  const RecipeDetailScreen({super.key, required this.recipe});
 
   @override
   Widget build(BuildContext context) {

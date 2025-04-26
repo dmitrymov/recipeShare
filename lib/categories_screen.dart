@@ -3,7 +3,6 @@ import 'package:recipeShare/database_helper.dart'; // Adjust the import path
 import 'package:recipeShare/app_localizations.dart';
 import 'package:recipeShare/custom_app_bar.dart';
 import 'package:recipeShare/recipe_list_by_category_screen.dart';
-import 'package:recipeShare/l10n/app_en.arb';
  // We'll create this next
 
 class CategoriesScreen extends StatefulWidget {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:recipeShare/database_helper.dart';
-import 'package:recipeShare/main.dart';
 import 'package:recipeShare/recipe_item.dart';
 
 class RecipeListByCategoryScreen extends StatefulWidget {
