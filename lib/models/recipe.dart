@@ -1,4 +1,4 @@
-class Recipe {
+class Recipe {  
   int? id;
   String name;
   String ingredients;
@@ -6,7 +6,7 @@ class Recipe {
   int categoryId;
   String notes;
   List<String> images;
-  DateTime createdAt;
+  DateTime createdAt; 
 
   Recipe({
     this.id,
@@ -45,7 +45,7 @@ class Recipe {
         'instructions': instructions,
         'category_id': categoryId,
         'notes': notes,
-        'images': images,
+        'images': images.join('\n'),
         'created_at': createdAt.toIso8601String(),
       };
 
@@ -56,7 +56,7 @@ class Recipe {
         instructions: json['instructions'],
         categoryId: json['category_id'],
         notes: json['notes'],
-        images: List<String>.from(json['images']),
+        images: json['images'].split('\n'),
         createdAt: DateTime.parse(json['created_at']),
       );
 }

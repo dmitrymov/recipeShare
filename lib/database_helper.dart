@@ -160,12 +160,6 @@ class DatabaseHelper {
     );
     return recipes.map((map) => _mapToRecipe(map)!).toList();
   }
-  
-  // Future<List<Category>> getAllCategories() async {
-  //   final db = await database;
-  //   final List<Map<String, dynamic>> categories = await db.query('categories');
-  //   return categories.map((map) => _mapToCategory(map)!).toList();
-  // }
 
   Recipe? _mapToRecipe(Map<String, dynamic>? map) {
     if (map == null) return null;
@@ -177,7 +171,7 @@ class DatabaseHelper {
         instructions: map['instructions'],
         categoryId: map['category_id'],
         notes: map['notes'],
-        images: jsonDecode(map['images'] ?? '[]').cast<String>(),
+        images: map['images'].split('\n'),
         createdAt: DateTime.parse(map['created_at'] ?? DateTime.now().toIso8601String()));
   }
 
@@ -197,25 +191,27 @@ class DatabaseHelper {
       final categoryIds = categories.map((c) => c.id as int).toList();
       await insertRecipe(
         Recipe(
+          id: 10,
           name: 'Spaghetti Carbonara',
           ingredients:
               '["spaghetti", "eggs", "bacon", "parmesan cheese", "black pepper"]',
           instructions:
               '["Cook spaghetti", "Fry bacon", "Mix eggs and cheese", "Combine everything"]',
-          categoryId: categoryIds[0], // Use an existing category ID
+          categoryId: categoryIds[0],
           notes: 'Classic Italian recipe',
-          images: ['https://example.com/carbonara.jpg'],
+          images: [],
           createdAt: DateTime.now(),
         ),
       );
       await insertRecipe(
         Recipe(
+          id: 20,
           name: 'Chicken Stir-Fry',
           ingredients:
               '["flour", "sugar", "cocoa powder", "eggs", "milk", "butter"]',
           instructions:
               '["Mix dry ingredients", "Mix wet ingredients", "Combine and bake"]',
-          categoryId: categoryIds[2],
+          categoryId: categoryIds[2], // Use an existing category ID
           notes: 'Delicious chocolate cake',
           images: ['https://example.com/cake.jpg'],
           createdAt: DateTime.now(),
