@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:recipeShare/models/recipe.dart';
 import 'package:recipeShare/database_helper.dart';
+
 import 'package:recipeShare/recipe_item.dart';
 
 class RecipeListByCategoryScreen extends StatefulWidget {
@@ -18,21 +20,20 @@ class RecipeListByCategoryScreen extends StatefulWidget {
 
 class _RecipeListByCategoryScreenState extends State<RecipeListByCategoryScreen> {
   final DatabaseHelper _dbHelper = DatabaseHelper();
-  List<Map<String, dynamic>> _recipes = [];
+  List<Recipe> _recipes = [];
 
   @override
   void initState() {
     super.initState();
     _loadRecipesByCategory();
   }
+  Future<List<Recipe>> _getRecipesByCategory() {
+    
+    return _dbHelper.getRecipesByCategoryId(widget.categoryId);
 
+  }
   Future<void> _loadRecipesByCategory() async {
-    final db = await _dbHelper.database;
-    final recipes = await db.query(
-      'recipes',
-      where: 'category_id = ?',
-      whereArgs: [widget.categoryId],
-    );
+    final recipes = await _getRecipesByCategory();
     setState(() {
       _recipes = recipes;
     });
@@ -51,9 +52,7 @@ class _RecipeListByCategoryScreenState extends State<RecipeListByCategoryScreen>
           : ListView.builder(
               itemCount: _recipes.length,
               itemBuilder: (context, index) {
-                final recipe = _recipes[index];
-                return RecipeItem(recipe: recipe);
-
+                return RecipeItem(recipe: _recipes[index]);
               },
             ),
     );

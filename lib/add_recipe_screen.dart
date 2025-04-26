@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:recipeShare/app_localizations.dart';
-import 'package:recipeShare/database_helper.dart'; // Adjust the import path as needed
+import 'package:recipeShare/custom_app_bar.dart';
+import 'package:recipeShare/database_helper.dart';
+import 'package:recipeShare/models/recipe.dart'; // Adjust the import path as needed
 
 class AddRecipeScreen extends StatefulWidget {
   const AddRecipeScreen({super.key});
@@ -17,6 +19,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   String? _selectedCategory;
   final DatabaseHelper _dbHelper = DatabaseHelper();
   List<Map<String, dynamic>> _categories = [];
+  String _selectedCategoryName = '';
 
   @override
   void initState() {
@@ -29,17 +32,28 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     setState(() {
       _categories = categories;
     });
+    if(_selectedCategory != null){
+      _loadCategoryName();
+    }
+  }
+
+  Future<void> _loadCategoryName() async {
+    final category = await _dbHelper.getCategoryById(int.parse(_selectedCategory ?? "0"));
+    setState(() => _selectedCategoryName = category?['name'] ?? '');
   }
 
   Future<void> _saveRecipe() async {
     if (_formKey.currentState!.validate()) {
-      final newRecipeId = await _dbHelper.insertRecipe({
-        'name': _nameController.text,
-        'ingredients': _ingredientsController.text.split('\n').map((e) => e.trim()).toList(),
-        'instructions': _instructionsController.text.split('\n').map((e) => e.trim()).toList(),
-        'categoryId': _selectedCategory != null ? int.tryParse(_selectedCategory!) : null,
-        'notes': '', // We can add a notes field later if needed
-      });
+      var catId = int.tryParse(_selectedCategory ?? '') ?? 0;
+      final newRecipeId = await _dbHelper.insertRecipe(Recipe(
+        name: _nameController.text,
+        ingredients: _ingredientsController.text,
+        instructions: _instructionsController.text,
+        categoryId: catId,
+        notes: '', // We can add a notes field later if needed
+        images: [], // We can add an images field later if needed
+        createdAt: DateTime.now(),  
+      ));
 
       if (newRecipeId > 0) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -58,9 +72,13 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).addRecipe),
-      ),
+      appBar: CustomAppBar(
+          title: AppLocalizations.of(context).addRecipe,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -127,6 +145,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 onChanged: (value) {
                   setState(() {
                     _selectedCategory = value;
+                    _loadCategoryName();
                   });
                 },
               ),

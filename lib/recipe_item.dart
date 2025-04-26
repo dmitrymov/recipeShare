@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:recipeShare/recipe_detail_screen.dart';
+import 'package:recipeShare/models/recipe.dart';
 
 class RecipeItem extends StatelessWidget {
-  final Map<String, dynamic> recipe;
+  final Recipe recipe;
 
   const RecipeItem({super.key, required this.recipe});
-
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,15 +26,15 @@ class RecipeItem extends StatelessWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         title: Text(
-          recipe['name'] ?? 'Untitled Recipe',
+          recipe.name,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text('Category ID: ${recipe['category_id'] ?? 'N/A'}'),
+        subtitle: Text('Category ID: ${recipe.categoryId ?? 0}'),
                 onTap: () {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => RecipeDetailScreen(recipe: recipe)));
+                  builder: (context) => RecipeDetailScreen(recipe: recipe,)));
         },
       ),
     );

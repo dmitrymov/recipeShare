@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:recipeShare/app_localizations.dart';
-import 'package:recipeShare/database_helper.dart'; // Adjust the import path
-import 'package:recipeShare/edit_recipe_screen.dart'; // Adjust the import path
+import 'package:recipeShare/database_helper.dart';
+import 'package:recipeShare/edit_recipe_screen.dart';
+import 'package:recipeShare/models/recipe.dart';
 import 'package:share_plus/share_plus.dart';
 
-class RecipeDetailScreen extends StatelessWidget {
-  final Map<String, dynamic> recipe;
+class RecipeDetailScreen extends StatefulWidget {
+  final Recipe recipe;
+
+  const RecipeDetailScreen({super.key, required this.recipe});
+
+  @override
+  _RecipeDetailScreenState createState() => _RecipeDetailScreenState();
+}
+
+class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
+  late Recipe _recipe;
   final DatabaseHelper _dbHelper = DatabaseHelper();
 
-  RecipeDetailScreen({super.key, required this.recipe});
+  @override
+  void initState() {
+    super.initState();
+    _recipe = widget.recipe;
+  }
 
   Future<void> _deleteRecipe(BuildContext context) async {
-    int? recipeId = recipe['id'];
-    if (recipeId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Recipe ID is missing.')),
+    if (_recipe == null) {
+      ScaffoldMessenger.of(context).showSnackBar(  
+        const SnackBar(content: Text('Recipe is missing.')),
       );
       return;
     }
@@ -41,7 +54,7 @@ class RecipeDetailScreen extends StatelessWidget {
     );
 
     if (confirmed == true) {
-      int rowsAffected = await _dbHelper.deleteRecipe(recipeId);
+      int rowsAffected = await _dbHelper.deleteRecipe(_recipe.id!);
       if (rowsAffected > 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Recipe deleted successfully.')),
@@ -56,19 +69,16 @@ class RecipeDetailScreen extends StatelessWidget {
     }
   }
 
-  Future<void> _shareRecipe(BuildContext context) async {
-    final String name = recipe['name'] ?? 'Untitled Recipe';
-    final List<String> ingredients = (jsonDecode(recipe['ingredients'] ?? '[]') as List<dynamic>)
-        .cast<String>();
-    final List<String> instructions = (jsonDecode(recipe['instructions'] ?? '[]') as List<dynamic>)
-        .cast<String>();
+  Future<void> _shareRecipe(BuildContext context, Recipe recipe) async {
+    final String name = recipe.name;
+    final String ingredients = recipe.ingredients;
+    final String instructions = recipe.instructions;
 
-    String textToShare = '$name\n\nIngredients:\n${ingredients.map((i) => '- $i').join('\n')}\n\nInstructions:\n${instructions.asMap().entries.map((entry) => '${entry.key + 1}. ${entry.value}').join('\n')}';
+    String textToShare = '$name\n\nIngredients:\n$ingredients\n\nInstructions:\n$instructions';
 
-    if (recipe['notes'] != null && recipe['notes'].isNotEmpty) {
-      textToShare += '\n\nNotes:\n${recipe['notes']}';
+    if (recipe.notes != null && recipe.notes!.isNotEmpty) {
+      textToShare += '\n\nNotes:\n${recipe.notes}';
     }
-
     SharePlus.instance.share(ShareParams(
         text: textToShare,
         subject: "Share",
@@ -77,10 +87,20 @@ class RecipeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> ingredients = (jsonDecode(recipe['ingredients'] ?? '[]') as List<dynamic>)
-        .cast<String>();
-    final List<String> instructions = (jsonDecode(recipe['instructions'] ?? '[]') as List<dynamic>)
-        .cast<String>();
+    final List<String> ingredients = _recipe.ingredients.split('\n').where((s) => s.trim().isNotEmpty).toList();
+    final List<String> instructions = _recipe.instructions.split('\n').where((s) => s.trim().isNotEmpty).toList();
+    List<String> images = [];
+
+    try {
+      if (_recipe.images != null) {
+        images = _recipe.images!.cast<String>();
+      } else {
+        images = [];
+      }
+    } catch (e) {
+      print('Error casting images to List<String>: $e');
+      images = [];
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -90,10 +110,8 @@ class RecipeDetailScreen extends StatelessWidget {
             icon: const Icon(Icons.edit),
             onPressed: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditRecipeScreen(recipe: recipe),
-                ),
+                context, MaterialPageRoute(
+                    builder: (context) => EditRecipeScreen(recipe: _recipe))
               );
             },
           ),
@@ -104,8 +122,21 @@ class RecipeDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            if (images.isNotEmpty)
+              SizedBox(
+                height: 200, // Adjust the height as needed
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: images.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.network(images[index]),
+                    );
+                  },
+                )),
             Text(
-              recipe['name'] ?? 'Untitled Recipe',
+              _recipe.name ?? 'Untitled Recipe',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 16.0),
@@ -132,45 +163,43 @@ class RecipeDetailScreen extends StatelessWidget {
             const SizedBox(height: 8.0),
             if (instructions.isNotEmpty)
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: instructions.asMap().entries.map((entry) {
-                  int index = entry.key + 1;
-                  String step = entry.value;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text('$index. $step'),
-                  );
-                }).toList(),
-              )
-            else
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: instructions.asMap().entries.map((entry) {
+                    int index = entry.key + 1;
+                    String step = entry.value;
+                    return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text('$index. $step'));
+                  }).toList())
+            else 
               const Text('No instructions provided.'),
-            if (recipe['notes'] != null && recipe['notes'].isNotEmpty) ...[
+            if (_recipe.notes.isNotEmpty) ...[
               const SizedBox(height: 16.0),
               const Text(
                 'Notes',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8.0),
-              Text(recipe['notes']),
+              Text(_recipe.notes),
             ],
-            if (recipe['created_at'] != null) ...[
+            if (_recipe.createdAt != null) ...[
               const SizedBox(height: 16.0),
               Text(
-                'Added on: ${DateTime.parse(recipe['created_at']).toLocal().toString().split('.')[0]}',
+                'Added on: ${_recipe.createdAt!.toLocal().toString().split('.')[0]}',
                 style: const TextStyle(color: Colors.grey),
               ),
             ],
             const SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: () => _deleteRecipe(context),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),  
               child: const Text('Delete Recipe', style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _shareRecipe(context),
+        onPressed: () => _shareRecipe(context, _recipe),
         child: const Icon(Icons.share),
       ),
     );

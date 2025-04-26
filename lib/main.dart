@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipeShare/database_helper.dart'; // Adjust the import path as needed
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:recipeShare/models/recipe.dart';
 import 'package:recipeShare/profile_screen.dart';
 import 'package:recipeShare/menu_screen.dart';
 import 'package:recipeShare/custom_app_bar.dart';
@@ -47,7 +48,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final DatabaseHelper _dbHelper = DatabaseHelper();
-  List<Map<String, dynamic>> _recipes = [];
+  List<Recipe> _recipes = [];
 
   @override
   void initState() {

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:recipeShare/database_helper.dart'; // Adjust the import path
+import 'package:recipeShare/database_helper.dart';
 import 'dart:convert';
+import 'package:recipeShare/custom_app_bar.dart';
 import 'package:recipeShare/app_localizations.dart';
+import 'package:recipeShare/models/recipe.dart';
 
 class EditRecipeScreen extends StatefulWidget {
-  final Map<String, dynamic> recipe;
+  final Recipe recipe;
 
   const EditRecipeScreen({super.key, required this.recipe});
 
   @override
   State<EditRecipeScreen> createState() => _EditRecipeScreenState();
+
 }
 
 class _EditRecipeScreenState extends State<EditRecipeScreen> {
@@ -20,15 +23,27 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   String? _selectedCategory;
   final DatabaseHelper _dbHelper = DatabaseHelper();
   List<Map<String, dynamic>> _categories = [];
+  String _categoryName = "";
 
   @override
   void initState() {
     super.initState();
+    print(widget.recipe);
     _loadCategories();
-    _nameController = TextEditingController(text: widget.recipe['name'] ?? '');
-    _ingredientsController = TextEditingController(text: (jsonDecode(widget.recipe['ingredients'] ?? '[]') as List<dynamic>).cast<String>().join('\n'));
-    _instructionsController = TextEditingController(text: (jsonDecode(widget.recipe['instructions'] ?? '[]') as List<dynamic>).cast<String>().join('\n'));
-    _selectedCategory = widget.recipe['category_id']?.toString();
+    _nameController = TextEditingController(text: widget.recipe.name);
+    _ingredientsController = TextEditingController(text: (widget.recipe.ingredients));
+    _instructionsController = TextEditingController(text: (jsonDecode(widget.recipe.instructions ?? '[]') as List<dynamic>).cast<String>().join('\n'));
+    _selectedCategory = widget.recipe.categoryId.toString();
+    _loadCategoryName();
+  }
+
+  Future<void> _loadCategoryName() async {
+    final category = await _dbHelper.getCategoryById(widget.recipe.categoryId);
+    if (category != null) {
+      setState(() {
+        _categoryName = category['name'];
+      });
+    }
   }
 
   Future<void> _loadCategories() async {
@@ -38,16 +53,15 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     });
   }
 
-  Future<void> _updateRecipe() async {
+  Future<void> _updateRecipe(Recipe recipe) async {
     if (_formKey.currentState!.validate()) {
-      final updatedRows = await _dbHelper.updateRecipe({
-        'id': widget.recipe['id'],
-        'name': _nameController.text,
-        'ingredients': _ingredientsController.text.split('\n').map((e) => e.trim()).toList(),
-        'instructions': _instructionsController.text.split('\n').map((e) => e.trim()).toList(),
-        'categoryId': _selectedCategory != null ? int.tryParse(_selectedCategory!) : null,
-        'notes': widget.recipe['notes'] ?? '', // Keep existing notes for now
-      });
+      final updatedRecipe = recipe.copyWith(
+          name: _nameController.text,
+          ingredients: _ingredientsController.text,
+          instructions: _instructionsController.text,
+          categoryId: _selectedCategory != null ? int.parse(_selectedCategory!) : 0
+          );
+      final updatedRows = await _dbHelper.updateRecipe(updatedRecipe);
 
       if (updatedRows > 0) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -63,12 +77,18 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).editRecipe),
-      ),
+      appBar: CustomAppBar(
+          title: AppLocalizations.of(context).editRecipe,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -140,7 +160,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
               ),
               const SizedBox(height: 24.0),
               ElevatedButton(
-                onPressed: _updateRecipe,
+                onPressed: () => _updateRecipe(widget.recipe),
                 child: const Text('Update Recipe'),
               ),
             ],

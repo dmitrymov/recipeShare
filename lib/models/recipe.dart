@@ -19,6 +19,25 @@ class Recipe {
     required this.createdAt,
   });
 
+  Recipe copyWith({
+    int? id,
+    String? name,
+    String? ingredients,
+    String? instructions,
+    int? categoryId,
+    String? notes,
+    List<String>? images,
+    DateTime? createdAt,
+  }) => Recipe(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    ingredients: ingredients ?? this.ingredients,
+    instructions: instructions ?? this.instructions,
+    categoryId: categoryId ?? this.categoryId,
+    notes: notes ?? this.notes,
+    images: images ?? this.images,
+    createdAt: createdAt ?? this.createdAt,
+  );
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
