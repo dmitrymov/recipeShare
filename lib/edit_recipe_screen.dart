@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:recipeShare/custom_app_bar.dart';
 import 'package:recipeShare/app_localizations.dart';
 import 'package:recipeShare/models/recipe.dart';
+import 'package:recipeShare/models/category.dart';
 
 class EditRecipeScreen extends StatefulWidget {
   final Recipe recipe;
@@ -21,8 +22,8 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   late final TextEditingController _ingredientsController;
   late final TextEditingController _instructionsController;
   String? _selectedCategory;
+  late List<Category> _categories = [];
   final DatabaseHelper _dbHelper = DatabaseHelper();
-  List<Map<String, dynamic>> _categories = [];
   String _categoryName = "";
 
   @override
@@ -41,13 +42,13 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     final category = await _dbHelper.getCategoryById(widget.recipe.categoryId);
     if (category != null) {
       setState(() {
-        _categoryName = category['name'];
+        _categoryName = category.name;
       });
     }
   }
 
   Future<void> _loadCategories() async {
-    final categories = await _dbHelper.getAllCategories();
+    final categories = await _dbHelper.getAllCategories() ;
     setState(() {
       _categories = categories;
     });
@@ -59,8 +60,8 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
           name: _nameController.text,
           ingredients: _ingredientsController.text,
           instructions: _instructionsController.text,
-          categoryId: _selectedCategory != null ? int.parse(_selectedCategory!) : 0
-          );
+          categoryId: _selectedCategory != null ? int.tryParse(_selectedCategory!) : 0);
+
       final updatedRows = await _dbHelper.updateRecipe(updatedRecipe);
 
       if (updatedRows > 0) {
@@ -147,10 +148,10 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                 ),
                 value: _selectedCategory,
                 items: _categories.map((category) {
-                  return DropdownMenuItem<String>(
-                    value: category['id'].toString(),
-                    child: Text(category['name'] ?? 'No Name'),
-                  );
+                      return DropdownMenuItem<String>(
+                        value: category.id.toString(),
+                        child: Text(category.name),
+                      );
                 }).toList(),
                 onChanged: (value) {
                   setState(() {

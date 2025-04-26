@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:recipeShare/database_helper.dart'; // Adjust the import path as needed
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:recipeShare/models/recipe.dart';
-import 'package:recipeShare/profile_screen.dart';
-import 'package:recipeShare/menu_screen.dart';
 import 'package:recipeShare/custom_app_bar.dart';
-import 'package:recipeShare/add_recipe_screen.dart';
 import 'package:recipeShare/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:recipeShare/language_provider.dart';

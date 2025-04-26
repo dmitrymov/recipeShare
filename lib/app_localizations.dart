@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
 
+import 'package:recipeShare/models/category.dart';
 class AppLocalizations {
   AppLocalizations(this.locale);
 
@@ -25,6 +26,11 @@ class AppLocalizations {
       'exit':'Exit',
       'languages':'Languages',
       'addNewCategory':'Add New Category',
+      'Breakfast': 'Breakfast',
+      'Lunch': 'Lunch',
+      'Dinner': 'Dinner',
+      'Dessert': 'Dessert',
+      'Snacks': 'Snacks',
       'categoryName':'Category Name',
       'cancel':'Cancel',
       'add':'Add',
@@ -45,6 +51,11 @@ class AppLocalizations {
       'exit':'Salir',
       'languages':'Idiomas',
       'addNewCategory':'Añadir Nueva Categoría',
+      'Breakfast': 'Desayuno',
+      'Lunch': 'Almuerzo',
+      'Dinner': 'Cena',
+      'Dessert': 'Postre',
+      'Snacks': 'Bocadillos',
       'categoryName':'Nombre de Categoría',
       'cancel':'Cancelar',
       'add':'Añadir',
@@ -65,6 +76,11 @@ class AppLocalizations {
       'exit':'Quitter',
       'languages':'Langues',
       'addNewCategory':'Ajouter une nouvelle catégorie',
+      'Breakfast': 'Petit-déjeuner',
+      'Lunch': 'Déjeuner',
+      'Dinner': 'Dîner',
+      'Dessert': 'Dessert',
+      'Snacks': 'Collations',
       'categoryName':'Nom de la catégorie',
       'cancel':'Annuler',
       'add':'Ajouter',
@@ -85,6 +101,11 @@ class AppLocalizations {
       'exit':'Verlassen',
       'languages':'Sprachen',
       'addNewCategory':'Neue Kategorie hinzufügen',
+      'Breakfast': 'Frühstück',
+      'Lunch': 'Mittagessen',
+      'Dinner': 'Abendessen',
+      'Dessert': 'Nachtisch',
+      'Snacks': 'Snacks',
       'categoryName':'Kategoriename',
       'cancel':'Abbrechen',
       'add':'Hinzufügen',
@@ -105,6 +126,11 @@ class AppLocalizations {
       'exit':'יציאה',
       'languages':'שפות',
       'addNewCategory':'הוסף קטגוריה חדשה',
+      'Breakfast': 'ארוחת בוקר',
+      'Lunch': 'ארוחת צהריים',
+      'Dinner': 'ארוחת ערב',
+      'Dessert': 'קינוח',
+      'Snacks': 'חטיפים',
       'categoryName':'שם קטגוריה',
       'cancel':'בטל',
       'add':'הוסף',
@@ -160,6 +186,18 @@ class AppLocalizations {
   String get addNewCategory {
     return lookup('addNewCategory');
   }
+    String get breakfast {
+    return lookup('Breakfast');
+  }
+   String get lunch {
+    return lookup('Lunch');
+  }
+   String get dinner {
+    return lookup('Dinner');
+  }
+    String get dessert {
+    return lookup('Dessert');
+  }
 
   String get categoryName {
     return lookup('categoryName');
@@ -183,6 +221,17 @@ class AppLocalizations {
 
   String get categoryNameCannotBeEmpty {
     return lookup('categoryNameCannotBeEmpty');
+  }
+
+  List<Category> get getCategories {
+    return [
+      Category(id: 1, name: breakfast),
+      Category(id: 2, name: lunch),
+      Category(id: 3, name: dinner),
+      Category(id: 4, name: dessert),
+      Category(id: 5, name: lookup('Snacks')),
+    ];
+
   }
   
     String lookup(String key) {

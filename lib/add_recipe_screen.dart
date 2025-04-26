@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:recipeShare/app_localizations.dart';
 import 'package:recipeShare/custom_app_bar.dart';
 import 'package:recipeShare/database_helper.dart';
+import 'package:recipeShare/models/category.dart';
 import 'package:recipeShare/models/recipe.dart'; // Adjust the import path as needed
 
 class AddRecipeScreen extends StatefulWidget {
@@ -16,9 +17,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   final _nameController = TextEditingController();
   final _ingredientsController = TextEditingController();
   final _instructionsController = TextEditingController();
-  String? _selectedCategory;
   final DatabaseHelper _dbHelper = DatabaseHelper();
-  List<Map<String, dynamic>> _categories = [];
+  List<Category> _categories = [];
   String _selectedCategoryName = '';
 
   @override
@@ -30,21 +30,22 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   Future<void> _loadCategories() async {
     final categories = await _dbHelper.getAllCategories();
     setState(() {
-      _categories = categories;
+      _categories = categories.isNotEmpty ? categories : [];
     });
-    if(_selectedCategory != null){
+    if (_categories.isNotEmpty) {
+      _selectedCategory = _categories.first.id ?? 0;
       _loadCategoryName();
     }
   }
 
   Future<void> _loadCategoryName() async {
-    final category = await _dbHelper.getCategoryById(int.parse(_selectedCategory ?? "0"));
-    setState(() => _selectedCategoryName = category?['name'] ?? '');
+    final category = await _dbHelper.getCategoryById(_selectedCategory);
+    setState(() => _selectedCategoryName = category?.name ?? '');
   }
-
+  int _selectedCategory = 0;
   Future<void> _saveRecipe() async {
     if (_formKey.currentState!.validate()) {
-      var catId = int.tryParse(_selectedCategory ?? '') ?? 0;
+      int catId = _selectedCategory;
       final newRecipeId = await _dbHelper.insertRecipe(Recipe(
         name: _nameController.text,
         ingredients: _ingredientsController.text,
@@ -74,13 +75,13 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     return Scaffold(
       appBar: CustomAppBar(
           title: AppLocalizations.of(context).addRecipe,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
         ),
+      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
@@ -130,21 +131,21 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 },
               ),
               const SizedBox(height: 16.0),
-              DropdownButtonFormField<String>(
+              DropdownButtonFormField<int>(
                 decoration: const InputDecoration(
                   labelText: 'Category',
                   border: OutlineInputBorder(),
                 ),
                 value: _selectedCategory,
                 items: _categories.map((category) {
-                  return DropdownMenuItem<String>(
-                    value: category['id'].toString(),
-                    child: Text(category['name'] ?? 'No Name'),
+                  return DropdownMenuItem<int>(
+                    value: category.id,
+                    child: Text(category.name),
                   );
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
-                    _selectedCategory = value;
+                    _selectedCategory = value ?? 0;
                     _loadCategoryName();
                   });
                 },

@@ -3,6 +3,8 @@ import 'package:path/path.dart'; // Import path for manipulating file paths
 import 'package:recipeShare/models/recipe.dart';
 import 'dart:convert'; // Import dart:convert for JSON encoding and decoding
 
+import 'package:recipeShare/models/category.dart';
+
 class DatabaseHelper {
   static Database? _database;
   static final DatabaseHelper instance = DatabaseHelper._internal();
@@ -84,6 +86,14 @@ class DatabaseHelper {
     return null;
   }
 
+  Category? _mapToCategory(Map<String, dynamic>? map) {
+    if (map == null) return null;
+
+    return Category(
+      id: map['id'],
+      name: map['name'],
+    );
+  }
   Future<int> updateUser(Map<String, dynamic> user) async {
     final db = await database;
     return await db.update(
@@ -105,36 +115,41 @@ class DatabaseHelper {
 
   // --- CRUD Operations for Categories ---
 
-  Future<int> insertCategory(String name) async {
+  Future<int> insertCategory(Category category) async {
     final db = await database;
     return await db.insert(
       'categories',
-      {'name': name},
+      {
+        'name': category.name,
+      },
       conflictAlgorithm: ConflictAlgorithm.replace, // Avoid duplicate entries
     );
   }
 
-  Future<List<Map<String, dynamic>>> getAllCategories() async {
+  Future<List<Category>> getAllCategories() async {
     final db = await database;
     final categories = await db.query('categories');
 
-     if (categories.isEmpty) {//for testing
-        // Insert dummy data if the categories table is empty
-        await insertCategory('Italian');
-        await insertCategory('Asian');
-        await insertCategory('Desserts');
-    }
-    return await db.query('categories');
+    return categories.map((map) => _mapToCategory(map)!).toList();
   }
 
-  Future<Map<String, dynamic>?> getCategoryById(int id) async {
+  Future<Category?> getCategoryById(int id) async {
+    if (_database == null) return null;
     final db = await database;
     final List<Map<String, dynamic>> result = await db.query(
       'categories',
       where: 'id = ?',
       whereArgs: [id]);
-     return result.isNotEmpty ? result.first : null;
+     return result.isNotEmpty ? _mapToCategory(result.first) : null;
   }
+
+   Future<int> insertRecipe(Recipe recipe) async{
+    final db = await database;
+    return await db.insert(
+      'recipes',
+      recipe.toJson(),
+    );
+   }
 
   Future<List<Recipe>> getRecipesByCategoryId(int categoryId) async {
     final db = await database;
@@ -145,25 +160,14 @@ class DatabaseHelper {
     );
     return recipes.map((map) => _mapToRecipe(map)!).toList();
   }
-  // --- CRUD Operations for Recipes ---
+  
+  // Future<List<Category>> getAllCategories() async {
+  //   final db = await database;
+  //   final List<Map<String, dynamic>> categories = await db.query('categories');
+  //   return categories.map((map) => _mapToCategory(map)!).toList();
+  // }
 
-  Future<int> insertRecipe(Recipe recipe) async{
-    final db = await database;
-    return await db.insert(
-      'recipes',
-      {
-        'id': recipe.id,
-        'name': recipe.name,
-        'ingredients': recipe.ingredients,
-        'instructions': recipe.instructions,
-        'category_id': recipe.categoryId,
-        'notes': recipe.notes,
-        'images': jsonEncode(recipe.images),
-        'created_at': DateTime.now().toIso8601String(),
-      },
-    );
-  }
-   Recipe? _mapToRecipe(Map<String, dynamic>? map) {
+  Recipe? _mapToRecipe(Map<String, dynamic>? map) {
     if (map == null) return null;
 
     return Recipe(
@@ -180,48 +184,48 @@ class DatabaseHelper {
   Future<List<Recipe>> getAllRecipes() async {
       final db = await database;
       final categories = await getAllCategories();
-
-      if (categories.isNotEmpty) {
-        final categoryIds = categories.map((c) => c['id'] as int).toList();
-        final recipesMap = await db.query('recipes');
-        if (recipesMap.isEmpty) {
-          //for testing
-
-          await insertRecipe(Recipe(
-              name: 'Spaghetti Carbonara',
-              ingredients:
-              '["spaghetti", "eggs", "bacon", "parmesan cheese", "black pepper"]',
-              instructions:
-              '["Cook spaghetti", "Fry bacon", "Mix eggs and cheese", "Combine everything"]',
-              categoryId: categoryIds[0], // Use an existing category ID
-              notes: 'Classic Italian recipe',
-              images: ['https://example.com/carbonara.jpg'],
-              createdAt: DateTime.now()));
-          await insertRecipe(Recipe(
-              name: 'Chicken Stir-Fry',
-              ingredients:
-              '["chicken", "vegetables", "soy sauce", "ginger", "garlic"]',
-              instructions:
-              '["Cut chicken and vegetables", "Stir-fry everything", "Add soy sauce"]',
-              categoryId: categoryIds[1], // Use another existing category ID
-              notes: 'Quick and easy stir-fry',
-              images: ['https://example.com/stirfry.jpg'],
-              createdAt: DateTime.now()));
-          await insertRecipe(Recipe(
-              name: 'Chocolate Cake',
-            ingredients:
-                '["flour", "sugar", "cocoa powder", "eggs", "milk", "butter"]',
-            instructions:
-                '["Mix dry ingredients", "Mix wet ingredients", "Combine and bake"]',
-            categoryId: categoryIds[2],
-            notes: 'Delicious chocolate cake',
-            images: ['https://example.com/cake.jpg'],
-              createdAt: DateTime.now()));
-        }
+      if (categories.isEmpty) {//for testing
+          await insertCategory(Category(name:'Italian'));
+          await insertCategory(Category(name:'Asian'));
+          await insertCategory(Category(name:'Desserts'));
       }
-
-    final List<Map<String, dynamic>> recipes = await db.query('recipes');
-      return recipes.map((map) => _mapToRecipe(map)!).toList();
+    List<Map<String, dynamic>> recipes = await db.query('recipes');
+    var updated = false;
+    if (recipes.isEmpty) {
+      //for testing
+      updated = true;
+      final categoryIds = categories.map((c) => c.id as int).toList();
+      await insertRecipe(
+        Recipe(
+          name: 'Spaghetti Carbonara',
+          ingredients:
+              '["spaghetti", "eggs", "bacon", "parmesan cheese", "black pepper"]',
+          instructions:
+              '["Cook spaghetti", "Fry bacon", "Mix eggs and cheese", "Combine everything"]',
+          categoryId: categoryIds[0], // Use an existing category ID
+          notes: 'Classic Italian recipe',
+          images: ['https://example.com/carbonara.jpg'],
+          createdAt: DateTime.now(),
+        ),
+      );
+      await insertRecipe(
+        Recipe(
+          name: 'Chicken Stir-Fry',
+          ingredients:
+              '["flour", "sugar", "cocoa powder", "eggs", "milk", "butter"]',
+          instructions:
+              '["Mix dry ingredients", "Mix wet ingredients", "Combine and bake"]',
+          categoryId: categoryIds[2],
+          notes: 'Delicious chocolate cake',
+          images: ['https://example.com/cake.jpg'],
+          createdAt: DateTime.now(),
+        ),
+      );
+    }
+    if(updated) {
+      recipes = await db.query('recipes');
+    }
+    return recipes.map((map) => _mapToRecipe(map)!).toList();
   }
 
    Future<Recipe?> getRecipeById(int id) async {

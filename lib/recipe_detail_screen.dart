@@ -26,13 +26,6 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   }
 
   Future<void> _deleteRecipe(BuildContext context) async {
-    if (_recipe == null) {
-      ScaffoldMessenger.of(context).showSnackBar(  
-        const SnackBar(content: Text('Recipe is missing.')),
-      );
-      return;
-    }
-
     bool? confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -76,7 +69,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
     String textToShare = '$name\n\nIngredients:\n$ingredients\n\nInstructions:\n$instructions';
 
-    if (recipe.notes != null && recipe.notes!.isNotEmpty) {
+    if (recipe.notes.isNotEmpty) {
       textToShare += '\n\nNotes:\n${recipe.notes}';
     }
     SharePlus.instance.share(ShareParams(
@@ -92,12 +85,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     List<String> images = [];
 
     try {
-      if (_recipe.images != null) {
-        images = _recipe.images!.cast<String>();
-      } else {
-        images = [];
-      }
-    } catch (e) {
+      images = _recipe.images!.cast<String>();
+        } catch (e) {
       print('Error casting images to List<String>: $e');
       images = [];
     }
@@ -182,13 +171,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               const SizedBox(height: 8.0),
               Text(_recipe.notes),
             ],
-            if (_recipe.createdAt != null) ...[
-              const SizedBox(height: 16.0),
-              Text(
-                'Added on: ${_recipe.createdAt!.toLocal().toString().split('.')[0]}',
-                style: const TextStyle(color: Colors.grey),
-              ),
-            ],
+            ...[
+            const SizedBox(height: 16.0),
+            Text(
+              'Added on: ${_recipe.createdAt!.toLocal().toString().split('.')[0]}',
+              style: const TextStyle(color: Colors.grey),
+            ),
+          ],
             const SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: () => _deleteRecipe(context),
