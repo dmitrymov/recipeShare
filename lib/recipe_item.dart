@@ -23,10 +23,13 @@ class RecipeItem extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.all(8.0),
-        title: Text(recipe['name'] ?? 'Untitled Recipe'),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        title: Text(
+          recipe['name'] ?? 'Untitled Recipe',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         subtitle: Text('Category ID: ${recipe['category_id'] ?? 'N/A'}'),
-        onTap: () {
+                onTap: () {
           Navigator.push(
               context,
               MaterialPageRoute(
